@@ -12,7 +12,6 @@ export function Navigation() {
     { path: '/highlights', label: 'Highlights', icon: Sparkles },
     { path: '/projects', label: 'Projects', icon: Folder },
     { path: '/devlogs', label: 'Dev Log', icon: BookOpen },
-    { path: '/uikit', label: 'UI Kit', icon: Palette },
   ];
 
   const isActiveLink = (path: string) => {

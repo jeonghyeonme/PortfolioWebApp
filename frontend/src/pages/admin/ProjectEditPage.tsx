@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
-import { Textarea } from '../../components/ui/textarea';
+import { TiptapEditor } from '../../components/TiptapEditor';
 import { Label } from '../../components/ui/label';
 import { Card, CardContent } from '../../components/ui/card';
 import { Checkbox } from '../../components/ui/checkbox';
@@ -107,8 +107,11 @@ export function ProjectEditPage() {
                   <Input id="title" value={formData.title || ''} onChange={(e) => setFormData(p => ({...p, title: e.target.value}))} required />
                 </div>
                 <div>
-                  <Label htmlFor="description">상세 설명 (Markdown 지원)</Label>
-                  <Textarea id="description" value={formData.description || ''} onChange={(e) => setFormData(p => ({...p, description: e.target.value}))} rows={10} required />
+                  <Label htmlFor="description">상세 설명</Label>
+                  <TiptapEditor
+                    content={formData.description || ''}
+                    onChange={(newContent) => setFormData(p => ({ ...p, description: newContent }))}
+                  />
                 </div>
                 <div className="grid md:grid-cols-2 gap-6">
                   <div>

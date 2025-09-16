@@ -1,5 +1,5 @@
-import { useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, Outlet, useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 import { Navigation } from './components/Navigation';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { AdminLayout } from './components/AdminLayout';
@@ -11,11 +11,9 @@ import { ProjectDetailPage } from './pages/ProjectDetailPage';
 import { DevLogsPage } from './pages/DevLogsPage';
 import { DevLogDetailPage } from './pages/DevLogDetailPage';
 import { HighlightsPage } from './pages/HighlightsPage';
-import { UIKitPage } from './pages/UIKitPage';
 
 // Admin page imports
 import { LoginPage } from './pages/admin/LoginPage';
-import { DashboardPage } from './pages/admin/DashboardPage';
 import { ProfilePage } from './pages/admin/ProfilePage';
 import { ProjectsListPage } from './pages/admin/ProjectsListPage';
 import { ProjectEditPage } from './pages/admin/ProjectEditPage';
@@ -65,29 +63,37 @@ function AppContent() {
           <Route path="devlogs" element={<DevLogsPage />} />
           <Route path="devlogs/:id" element={<DevLogDetailPage />} />
           <Route path="highlights" element={<HighlightsPage />} />
-          <Route path="uikit" element={<UIKitPage />} />
-          <Route path="design-system" element={<Navigate to="/uikit" replace />} />
         </Route>
 
         {/* Admin Routes */}
         <Route path="/admin/login" element={<LoginPage />} />
-        <Route path="/admin" element={
-          <ProtectedRoute>
-            <AdminLayout />
-          </ProtectedRoute>
-        }>
-          <Route index element={<Navigate to="/admin/dashboard" replace />} />
-          <Route path="dashboard" element={<DashboardPage />} />
-          <Route path="projects" element={<ProjectsListPage />} />
-          <Route path="projects/new" element={<ProjectEditPage />} />
-          <Route path="projects/edit/:id" element={<ProjectEditPage />} />
-          <Route path="devlogs" element={<DevLogsListPage />} />
-          <Route path="devlogs/new" element={<DevLogEditPage />} />
-          <Route path="devlogs/edit/:id" element={<DevLogEditPage />} />
-          <Route path="highlights" element={<AdminHighlightsPage />} />
-          <Route path="tags" element={<TagsPage />} />
-          <Route path="skills" element={<SkillsPage />} />
-          <Route path="profile" element={<ProfilePage />} />
+        <Route 
+          path="/admin" 
+          element={
+            <ProtectedRoute>
+              <AdminLayout />
+            </ProtectedRoute>
+          }
+        >
+          {/* Mirrored Public Routes */}
+          <Route index element={<HomePage />} />
+          <Route path="projects" element={<ProjectsPage />} />
+          <Route path="projects/:id" element={<ProjectDetailPage />} />
+          <Route path="devlogs" element={<DevLogsPage />} />
+          <Route path="devlogs/:id" element={<DevLogDetailPage />} />
+          <Route path="highlights" element={<HighlightsPage />} />
+
+          {/* Admin-specific management pages (prefixed with "manage") */}
+          <Route path="manage/projects" element={<ProjectsListPage />} />
+          <Route path="manage/projects/new" element={<ProjectEditPage />} />
+          <Route path="manage/projects/edit/:id" element={<ProjectEditPage />} />
+          <Route path="manage/devlogs" element={<DevLogsListPage />} />
+          <Route path="manage/devlogs/new" element={<DevLogEditPage />} />
+          <Route path="manage/devlogs/edit/:id" element={<DevLogEditPage />} />
+          <Route path="manage/highlights" element={<AdminHighlightsPage />} />
+          <Route path="manage/tags" element={<TagsPage />} />
+          <Route path="manage/skills" element={<SkillsPage />} />
+          <Route path="manage/profile" element={<ProfilePage />} />
         </Route>
 
         {/* 404 Route */}
@@ -96,6 +102,8 @@ function AppContent() {
     </div>
   );
 }
+
+import { Footer } from './components/Footer';
 
 function PublicLayout() {
   return (
@@ -106,16 +114,6 @@ function PublicLayout() {
       </main>
       <Footer />
     </>
-  );
-}
-
-function Footer() {
-  return (
-    <footer className="bg-muted/30 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-6xl mx-auto">
-        {/* Footer content can be added here */}
-      </div>
-    </footer>
   );
 }
 

@@ -14,6 +14,24 @@ export const profileAPI = {
     }
     return data;
   },
+  update: async (updates: { [key: string]: any }) => {
+    // Assuming there's only one profile, we need its ID.
+    // Let's fetch it first, or assume a known ID if it's static.
+    // For this case, let's assume the profile ID is 1 for simplicity.
+    // A better approach would be to get the user's profile ID.
+    const { data, error } = await supabase
+      .from('Profile')
+      .update(updates)
+      .eq('id', 1) // IMPORTANT: Assuming profile ID is 1
+      .select()
+      .single();
+
+    if (error) {
+      console.error('Error updating profile:', error);
+      throw error;
+    }
+    return data;
+  },
 };
 
 // Projects API

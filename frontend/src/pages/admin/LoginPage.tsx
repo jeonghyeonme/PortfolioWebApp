@@ -31,7 +31,7 @@ export function LoginPage() {
       }
 
       if (data.user) {
-        navigate('/admin/dashboard');
+        navigate('/admin');
       }
     } catch (err) {
       console.error('Login error:', err);
