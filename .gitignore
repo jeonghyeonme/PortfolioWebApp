@@ -1,2 +1,5 @@
 # Ignore the backend directory
 backend/
+
+# Project documentation
+PortfolioWebApp_Overview.md
