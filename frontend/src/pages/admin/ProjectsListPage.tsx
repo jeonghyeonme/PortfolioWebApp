@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { Button } from '../../components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../../components/ui/card';
+import { Card, CardContent } from '../../components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../../components/ui/table';
 import { Badge } from '../../components/ui/badge';
 import { PlusCircle, MoreHorizontal } from 'lucide-react';
@@ -13,6 +13,7 @@ import { Toaster, toast } from 'sonner';
 interface Project {
   id: number;
   title: string;
+  published: boolean;
   created_at: string;
 }
 
@@ -79,6 +80,7 @@ export function ProjectsListPage() {
               <TableHeader>
                 <TableRow>
                   <TableHead>제목</TableHead>
+                  <TableHead>상태</TableHead>
                   <TableHead>생성일</TableHead>
                   <TableHead className="text-right">작업</TableHead>
                 </TableRow>
@@ -88,6 +90,11 @@ export function ProjectsListPage() {
                   projects.map((project) => (
                     <TableRow key={project.id}>
                       <TableCell className="font-medium">{project.title}</TableCell>
+                      <TableCell>
+                        <Badge variant={project.published ? 'default' : 'secondary'}>
+                          {project.published ? '발행됨' : '초안'}
+                        </Badge>
+                      </TableCell>
                       <TableCell>{new Date(project.created_at).toLocaleDateString('ko-KR')}</TableCell>
                       <TableCell className="text-right">
                         <DropdownMenu>
@@ -111,7 +118,7 @@ export function ProjectsListPage() {
                   ))
                 ) : (
                   <TableRow>
-                    <TableCell colSpan={3} className="h-24 text-center">
+                    <TableCell colSpan={4} className="h-24 text-center">
                       프로젝트가 없습니다.
                     </TableCell>
                   </TableRow>

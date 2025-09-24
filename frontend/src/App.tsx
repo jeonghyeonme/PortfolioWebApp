@@ -1,8 +1,8 @@
-import { BrowserRouter, Routes, Route, Navigate, Outlet, useNavigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Outlet, useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import { Navigation } from './components/Navigation';
-import { ProtectedRoute } from './components/ProtectedRoute';
-import { AdminLayout } from './components/AdminLayout';
+import { Footer } from './components/Footer';
+import { ProtectedRoute } from './components/auth/ProtectedRoute';
 
 // Page imports
 import { HomePage } from './pages/HomePage';
@@ -11,22 +11,17 @@ import { ProjectDetailPage } from './pages/ProjectDetailPage';
 import { DevLogsPage } from './pages/DevLogsPage';
 import { DevLogDetailPage } from './pages/DevLogDetailPage';
 import { HighlightsPage } from './pages/HighlightsPage';
-
-// Admin page imports
+import { HighlightDetailPage } from './pages/HighlightDetailPage'; // Add this import
 import { LoginPage } from './pages/admin/LoginPage';
-import { ProfilePage } from './pages/admin/ProfilePage';
-import { ProjectsListPage } from './pages/admin/ProjectsListPage';
+
+// Admin-specific page imports for editing/creating
 import { ProjectEditPage } from './pages/admin/ProjectEditPage';
-import { DevLogsListPage } from './pages/admin/DevLogsListPage';
 import { DevLogEditPage } from './pages/admin/DevLogEditPage';
-import { HighlightsPage as AdminHighlightsPage } from './pages/admin/HighlightsPage';
-import { TagsPage } from './pages/admin/TagsPage';
-import { SkillsPage } from './pages/admin/SkillsPage';
+import { HighlightEditPage } from './pages/admin/HighlightEditPage'; // Add this import
 
 // Custom hook for the admin shortcut
 const useAdminShortcut = () => {
   const navigate = useNavigate();
-
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.ctrlKey && event.shiftKey && event.key.toLowerCase() === 'l') {
@@ -35,9 +30,7 @@ const useAdminShortcut = () => {
       }
     };
     window.addEventListener('keydown', handleKeyDown);
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-    };
+    return () => window.removeEventListener('keydown', handleKeyDown);
   }, [navigate]);
 };
 
@@ -51,7 +44,6 @@ function App() {
 
 function AppContent() {
   useAdminShortcut();
-
   return (
     <div className="min-h-screen bg-background">
       <Routes>
@@ -63,37 +55,26 @@ function AppContent() {
           <Route path="devlogs" element={<DevLogsPage />} />
           <Route path="devlogs/:id" element={<DevLogDetailPage />} />
           <Route path="highlights" element={<HighlightsPage />} />
+          <Route path="highlights/:id" element={<HighlightDetailPage />} />
         </Route>
 
-        {/* Admin Routes */}
+        {/* Admin Login Route */}
         <Route path="/admin/login" element={<LoginPage />} />
-        <Route 
-          path="/admin" 
-          element={
-            <ProtectedRoute>
-              <AdminLayout />
-            </ProtectedRoute>
-          }
-        >
-          {/* Mirrored Public Routes */}
-          <Route index element={<HomePage />} />
-          <Route path="projects" element={<ProjectsPage />} />
-          <Route path="projects/:id" element={<ProjectDetailPage />} />
-          <Route path="devlogs" element={<DevLogsPage />} />
-          <Route path="devlogs/:id" element={<DevLogDetailPage />} />
-          <Route path="highlights" element={<HighlightsPage />} />
 
-          {/* Admin-specific management pages (prefixed with "manage") */}
-          <Route path="manage/projects" element={<ProjectsListPage />} />
-          <Route path="manage/projects/new" element={<ProjectEditPage />} />
-          <Route path="manage/projects/edit/:id" element={<ProjectEditPage />} />
-          <Route path="manage/devlogs" element={<DevLogsListPage />} />
-          <Route path="manage/devlogs/new" element={<DevLogEditPage />} />
-          <Route path="manage/devlogs/edit/:id" element={<DevLogEditPage />} />
-          <Route path="manage/highlights" element={<AdminHighlightsPage />} />
-          <Route path="manage/tags" element={<TagsPage />} />
-          <Route path="manage/skills" element={<SkillsPage />} />
-          <Route path="manage/profile" element={<ProfilePage />} />
+        {/* Protected Admin Routes */}
+        <Route path="/admin" element={<ProtectedRoute />}>
+          <Route element={<AdminLayout />}>
+            <Route index element={<HomePage isAdmin={true} />} />
+            <Route path="projects" element={<ProjectsPage isAdmin={true} />} />
+            <Route path="projects/new" element={<ProjectEditPage />} />
+            <Route path="projects/edit/:id" element={<ProjectEditPage />} />
+            <Route path="devlogs" element={<DevLogsPage isAdmin={true} />} />
+            <Route path="devlogs/new" element={<DevLogEditPage />} />
+            <Route path="devlogs/edit/:id" element={<DevLogEditPage />} />
+            <Route path="highlights" element={<HighlightsPage isAdmin={true} />} />
+            <Route path="highlights/new" element={<HighlightEditPage />} />
+            <Route path="highlights/edit/:id" element={<HighlightEditPage />} />
+          </Route>
         </Route>
 
         {/* 404 Route */}
@@ -103,12 +84,23 @@ function AppContent() {
   );
 }
 
-import { Footer } from './components/Footer';
-
 function PublicLayout() {
   return (
     <>
       <Navigation />
+      <main className="pt-16">
+        <Outlet />
+      </main>
+      <Footer />
+    </>
+  );
+}
+
+// AdminLayout will be similar to PublicLayout but might have a different Navbar or footer in the future
+function AdminLayout() {
+  return (
+    <>
+      <Navigation /> 
       <main className="pt-16">
         <Outlet />
       </main>

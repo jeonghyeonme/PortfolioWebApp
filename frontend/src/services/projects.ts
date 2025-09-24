@@ -4,6 +4,7 @@ export interface ProjectData {
   id?: number;
   title: string;
   description: string;
+  published: boolean;
   image_url?: string;
   project_url?: string;
   github_url?: string;
@@ -15,14 +16,13 @@ export interface ProjectData {
 
 // Helper to manage many-to-many relations
 const manageRelations = async (tableName: string, project_id: number, relatedIds: number[], relatedColumnName: string) => {
-  // Clear existing relations
-  await supabase.from(tableName).delete().eq('project_id', project_id);
+  const { error: deleteError } = await supabase.from(tableName).delete().eq('project_id', project_id);
+  if (deleteError) throw deleteError;
 
-  // Insert new relations if any
   if (relatedIds && relatedIds.length > 0) {
     const relations = relatedIds.map(id => ({ project_id, [relatedColumnName]: id }));
-    const { error } = await supabase.from(tableName).insert(relations);
-    if (error) throw error;
+    const { error: insertError } = await supabase.from(tableName).insert(relations);
+    if (insertError) throw insertError;
   }
 };
 
@@ -30,7 +30,7 @@ const manageRelations = async (tableName: string, project_id: number, relatedIds
 export const getProjects = async () => {
   const { data, error } = await supabase
     .from('Project')
-    .select('id, title, created_at')
+    .select('id, title, created_at, published')
     .order('created_at', { ascending: false });
   if (error) throw error;
   return data;
@@ -49,7 +49,6 @@ export const getProjectById = async (id: number) => {
     .single();
   if (error) throw error;
   
-  // Format data to be easier to use in the form
   const formattedData = {
     ...data,
     skill_ids: data.SkillOnProject.map((s: any) => s.Skill.id),
@@ -70,7 +69,7 @@ export const createProject = async (projectData: ProjectData) => {
   return data;
 };
 
-// UPDATE
+// UPDATE (Corrected)
 export const updateProject = async (id: number, projectData: any) => {
   const { skill_ids, tag_ids, ...mainData } = projectData;
 
@@ -78,6 +77,7 @@ export const updateProject = async (id: number, projectData: any) => {
   const dataToUpdate = {
     title: mainData.title,
     description: mainData.description,
+    published: mainData.published, // Ensure published is included
     image_url: mainData.image_url,
     project_url: mainData.project_url,
     github_url: mainData.github_url,
@@ -105,6 +105,9 @@ export const updateProject = async (id: number, projectData: any) => {
 
 // DELETE
 export const deleteProject = async (id: number) => {
+  await supabase.from('SkillOnProject').delete().eq('project_id', id);
+  await supabase.from('TagsOnProjects').delete().eq('project_id', id);
+  
   const { error } = await supabase.from('Project').delete().eq('id', id);
   if (error) throw error;
   return true;

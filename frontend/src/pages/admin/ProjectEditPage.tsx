@@ -6,6 +6,7 @@ import { Input } from '../../components/ui/input';
 import { TiptapEditor } from '../../components/TiptapEditor';
 import { Label } from '../../components/ui/label';
 import { Card, CardContent } from '../../components/ui/card';
+import { Switch } from '../../components/ui/switch';
 import { Checkbox } from '../../components/ui/checkbox';
 import { getProjectById, createProject, updateProject, ProjectData } from '../../services/projects';
 import { getSkills, SkillData } from '../../services/skills';
@@ -18,6 +19,7 @@ const defaultState: Partial<ProjectData> = {
   image_url: '',
   project_url: '',
   github_url: '',
+  published: false,
   skill_ids: [],
   tag_ids: [],
 };
@@ -72,7 +74,9 @@ export function ProjectEditPage() {
         await createProject(formData as ProjectData);
         toast.success('프로젝트가 성공적으로 생성되었습니다.');
       }
-      navigate('/admin/projects');
+      setTimeout(() => {
+        navigate('/admin/projects');
+      }, 1000); // 1-second delay before navigating
     } catch (error) {
       toast.error(`프로젝트 ${isEditMode ? '수정' : '생성'}에 실패했습니다.`);
     } finally {
@@ -96,9 +100,15 @@ export function ProjectEditPage() {
     <>
       <Toaster position="bottom-right" />
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} className="p-8">
-        <h1 className="text-2xl font-bold mb-6">{isEditMode ? '프로젝트 수정' : '새 프로젝트 추가'}</h1>
         <form onSubmit={handleSubmit} className="grid lg:grid-cols-3 gap-8 items-start">
           <div className="lg:col-span-2 space-y-6">
+            <div className="flex items-center justify-between">
+              <h1 className="text-2xl font-bold">{isEditMode ? '프로젝트 수정' : '새 프로젝트 추가'}</h1>
+              <div className="flex items-center space-x-2">
+                <Label htmlFor="published-switch">{formData.published ? '발행됨' : '초안'}</Label>
+                <Switch id="published-switch" checked={formData.published} onCheckedChange={(checked) => setFormData(p => ({...p, published: checked}))} />
+              </div>
+            </div>
             {/* Main form fields */}
             <Card>
               <CardContent className="p-6 space-y-4">

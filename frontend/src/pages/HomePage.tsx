@@ -5,10 +5,14 @@ import { Timeline } from '../components/Timeline';
 import { ProjectsSection } from '../components/ProjectsSection';
 import { DevLogSection } from '../components/DevLogSection';
 
-export function HomePage() {
+interface HomePageProps {
+  isAdmin?: boolean;
+}
+
+export function HomePage({ isAdmin = false }: HomePageProps) {
   return (
     <div>
-      <HeroSection />
+      <HeroSection isAdmin={isAdmin} />
       <HighlightSection />
       <Dashboard />
       <Timeline />
@@ -27,7 +31,7 @@ export function HomePage() {
         title="최근 개발 로그"
         showViewAll={true}
         viewAllLink="/devlogs"
-        publishedOnly={true}
+        publishedOnly={!isAdmin} // Show all posts for admin
       />
     </div>
   );

@@ -8,6 +8,7 @@ import { Label } from '../../components/ui/label';
 import { Card, CardContent } from '../../components/ui/card';
 import { Switch } from '../../components/ui/switch';
 import { Checkbox } from '../../components/ui/checkbox';
+import { Textarea } from '../../components/ui/textarea'; // Add this line
 import { getDevLogById, createDevLog, updateDevLog, DevLogData } from '../../services/devlogs';
 import { getTags, TagData } from '../../services/tags';
 import { Toaster, toast } from 'sonner';
@@ -71,7 +72,9 @@ export function DevLogEditPage() {
         await createDevLog(formData as DevLogData);
         toast.success('개발 로그가 성공적으로 생성되었습니다.');
       }
-      navigate('/admin/devlogs');
+      setTimeout(() => {
+        navigate('/admin/devlogs');
+      }, 1000);
     } catch (error) {
       toast.error(`개발 로그 ${isEditMode ? '수정' : '생성'}에 실패했습니다.`);
     } finally {
