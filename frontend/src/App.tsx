@@ -17,7 +17,7 @@ import { LoginPage } from './pages/admin/LoginPage';
 // Admin-specific page imports for editing/creating
 import { ProjectEditPage } from './pages/admin/ProjectEditPage';
 import { DevLogEditPage } from './pages/admin/DevLogEditPage';
-import { HighlightEditPage } from './pages/admin/HighlightEditPage'; // Add this import
+import { HighlightEditPage } from './pages/admin/HighlightEditPage';
 
 // Custom hook for the admin shortcut
 const useAdminShortcut = () => {

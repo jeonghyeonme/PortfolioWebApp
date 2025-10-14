@@ -8,6 +8,7 @@ export const profileAPI = {
       .select('*')
       .single();
 
+
     if (error) {
       console.error('Error fetching profile:', error);
       throw error;
@@ -220,3 +221,147 @@ export const tagsAPI = {
     return data.map(t => t.name);
   }
 };
+
+// Timeline API
+export const timelineAPI = {
+  getAll: async () => {
+    const { data, error } = await supabase
+      .from('Timeline')
+      .select('*')
+      .order('SortOrder', { ascending: true });
+
+    if (error) {
+      console.error('Error fetching timeline:', error);
+      throw error;
+    }
+    return data;
+  },
+  getById: async (id: string) => {
+    const { data, error } = await supabase
+      .from('Timeline')
+      .select('*')
+      .eq('Id', id)
+      .single();
+
+    if (error) {
+      console.error('Error fetching timeline item by id:', error);
+      throw error;
+    }
+    return data;
+  },
+  create: async (item: Omit<TimelineItem, 'Id' | 'CreatedAt' | 'UserId'>) => {
+    const { data, error } = await supabase
+      .from('Timeline')
+      .insert([item])
+      .select()
+      .single();
+
+    if (error) {
+      console.error('Error creating timeline item:', error);
+      throw error;
+    }
+    return data;
+  },
+  update: async (id: string, updates: Partial<TimelineItem>) => {
+    const { data, error } = await supabase
+      .from('Timeline')
+      .update(updates)
+      .eq('Id', id)
+      .select()
+      .single();
+
+    if (error) {
+      console.error('Error updating timeline item:', error);
+      throw error;
+    }
+    return data;
+  },
+  delete: async (id: string) => {
+    const { error } = await supabase
+      .from('Timeline')
+      .delete()
+      .eq('Id', id);
+
+    if (error) {
+      console.error('Error deleting timeline item:', error);
+      throw error;
+    }
+    return true;
+  },
+};
+
+// Define the TimelineItem type for better type-safety
+
+export interface TimelineItem {
+
+  Id: string;
+
+  UserId: string;
+
+  Type: 'work' | 'education';
+
+  Title: string;
+
+  Company?: string;
+
+  Location?: string;
+
+  Period: string;
+
+  Description?: string;
+
+  Technologies?: string[];
+
+  SortOrder: number;
+
+  CreatedAt: string;
+
+}
+
+
+
+// Dashboard API
+
+export const dashboardAPI = {
+
+  get: async () => {
+
+    const { data, error } = await supabase
+
+      .from('Dashboard')
+
+      .select('*')
+
+      .single();
+
+
+
+    if (error) {
+
+      console.error('Error fetching dashboard data:', error);
+
+      throw error;
+
+    }
+
+    return data;
+
+  },
+  update: async (id: number, updates: Partial<any>) => {
+    const { data, error } = await supabase
+      .from('Dashboard')
+      .update(updates)
+      .eq('id', id)
+      .select()
+      .single();
+    if (error) {
+      console.error('Error updating dashboard data:', error);
+      throw error;
+    }
+    return data;
+  },
+
+};
+
+
+

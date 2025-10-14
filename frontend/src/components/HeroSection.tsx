@@ -58,6 +58,12 @@ export function HeroSection({ isAdmin = false }: HeroSectionProps) {
   if (loading) return <section className="min-h-screen" />;
   if (!profile) return <section className="min-h-screen flex items-center justify-center"><p>{error || '프로필을 불러올 수 없습니다.'}</p></section>;
 
+  const githubUrl = profile.social_links?.github
+    ? profile.social_links.github.startsWith('http')
+      ? profile.social_links.github
+      : `https://github.com/${profile.social_links.github}`
+    : '#';
+
   return (
     <>
       <Toaster position="bottom-right" />
@@ -112,7 +118,7 @@ export function HeroSection({ isAdmin = false }: HeroSectionProps) {
                 {profile.social_links.email && <Button variant="outline" className="flex items-center gap-2" onClick={() => window.open(`mailto:${profile.social_links.email}`, '_blank')}><Mail className="w-4 h-4" />연락하기</Button>}
               </div>
               <div className="flex gap-3">
-                {profile.social_links.github && <Button size="icon" variant="ghost" onClick={() => window.open(profile.social_links.github, '_blank')}><Github className="w-5 h-5" /></Button>}
+                {profile.social_links.github && <Button size="icon" variant="ghost" onClick={() => window.open(githubUrl, '_blank')}><Github className="w-5 h-5" /></Button>}
                 {profile.social_links.linkedin && <Button size="icon" variant="ghost" onClick={() => window.open(profile.social_links.linkedin, '_blank')}><Linkedin className="w-5 h-5" /></Button>}
                 {profile.social_links.website && <Button size="icon" variant="ghost" onClick={() => window.open(profile.social_links.website, '_blank')}><Globe className="w-5 h-5" /></Button>}
               </div>

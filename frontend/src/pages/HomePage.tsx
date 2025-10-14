@@ -14,8 +14,8 @@ export function HomePage({ isAdmin = false }: HomePageProps) {
     <div>
       <HeroSection isAdmin={isAdmin} />
       <HighlightSection />
-      <Dashboard />
-      <Timeline />
+      <Dashboard isAdmin={isAdmin} />
+      <Timeline isAdmin={isAdmin} />
       
       {/* Latest Projects Preview */}
       <ProjectsSection 
