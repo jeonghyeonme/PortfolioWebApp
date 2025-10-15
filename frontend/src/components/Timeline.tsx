@@ -134,7 +134,7 @@ export function Timeline({ isAdmin = false }: TimelineProps) {
             className="text-center mb-12"
           >
             <div className="flex justify-center items-center gap-4 mb-4">
-              <h2 className="text-3xl sm:text-4xl">경력 & 학습 여정</h2>
+              <h2 className="text-3xl sm:text-4xl mb-4 font-bold tracking-tight">경력 & 학습 여정</h2>
               {isAdmin && (
                 <Button size="sm" onClick={handleAddNew}>
                   <PlusCircle className="w-4 h-4 mr-2" />

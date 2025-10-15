@@ -97,18 +97,21 @@ export function HeroSection({ isAdmin = false }: HeroSectionProps) {
                 <ImageWithFallback src={profile.profile_image_url} alt={profile.full_name} className="w-32 h-32 rounded-full mx-auto object-cover border-4 border-primary/20" />
               </motion.div>
             )}
-            <h1 className="text-4xl sm:text-6xl lg:text-7xl mb-6">
+            <h1 
+              className="text-4xl sm:text-6xl lg:text-7xl mb-6"
+              style={{ fontWeight: 800, letterSpacing: '-0.025em', textShadow: '2px 2px 4px rgba(0,0,0,0.1)' }}
+            >
               안녕하세요,{' '}
               <span className="bg-gradient-to-r from-primary to-chart-1 bg-clip-text text-transparent">{profile.job_title}</span>{' '}
               {profile.full_name}입니다
             </h1>
-            <div className="text-xl sm:text-2xl text-muted-foreground mb-8 max-w-3xl mx-auto leading-relaxed">
+            <div className="text-xl sm:text-2xl text-foreground/80 mb-8 max-w-3xl mx-auto leading-relaxed">
               {renderBioFromHTML(profile.bio)}
             </div>
             <div className="flex flex-wrap justify-center gap-2 mb-8">
               {profile.keywords.map((keyword, index) => (
                 <motion.div key={keyword} initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.5, delay: index * 0.1 }}>
-                  <Badge variant="secondary" className="text-sm px-3 py-1">{keyword}</Badge>
+                  <Badge variant="secondary" className="text-sm px-3 py-1" style={{ fontWeight: 600 }}>{keyword}</Badge>
                 </motion.div>
               ))}
             </div>
@@ -119,8 +122,6 @@ export function HeroSection({ isAdmin = false }: HeroSectionProps) {
               </div>
               <div className="flex gap-3">
                 {profile.social_links.github && <Button size="icon" variant="ghost" onClick={() => window.open(githubUrl, '_blank')}><Github className="w-5 h-5" /></Button>}
-                {profile.social_links.linkedin && <Button size="icon" variant="ghost" onClick={() => window.open(profile.social_links.linkedin, '_blank')}><Linkedin className="w-5 h-5" /></Button>}
-                {profile.social_links.website && <Button size="icon" variant="ghost" onClick={() => window.open(profile.social_links.website, '_blank')}><Globe className="w-5 h-5" /></Button>}
               </div>
             </motion.div>
           </motion.div>

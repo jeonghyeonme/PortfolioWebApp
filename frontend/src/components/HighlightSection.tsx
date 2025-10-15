@@ -99,7 +99,7 @@ export function HighlightSection() {
           viewport={{ once: true }}
           className="text-center mb-12"
         >
-          <h2 className="text-3xl sm:text-4xl mb-4">주요 성과</h2>
+          <h2 className="text-3xl sm:text-4xl mb-4 font-bold tracking-tight">주요 성과</h2>
           <p className="text-muted-foreground text-lg">
             특별히 주목할 만한 프로젝트와 학습 경험을 소개합니다
           </p>
