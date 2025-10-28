@@ -32,7 +32,8 @@ export function Timeline({ isAdmin = false }: TimelineProps) {
     setLoading(true);
     try {
       const data = await timelineAPI.getAll();
-      setTimelineData(data || []);
+      const sortedData = (data || []).sort((a, b) => (b.SortOrder ?? 0) - (a.SortOrder ?? 0));
+      setTimelineData(sortedData);
     } catch (err) {
       setError('경력 정보를 불러오는 데 실패했습니다.');
       console.error(err);
@@ -62,6 +63,7 @@ export function Timeline({ isAdmin = false }: TimelineProps) {
         await timelineAPI.delete(id);
         toast.success('항목이 성공적으로 삭제되었습니다.');
         fetchTimelineData();
+        setIsDialogOpen(false); // Close the dialog on successful deletion
       } catch (err) {
         toast.error('항목 삭제에 실패했습니다.');
         console.error(err);
@@ -166,14 +168,11 @@ export function Timeline({ isAdmin = false }: TimelineProps) {
                     }`}>
                       <Icon className="w-6 h-6" />
                     </div>
-                    <Card className="flex-1">
+                    <Card 
+                      className={`flex-1 transition-all duration-300 hover:shadow-lg hover:shadow-primary/10 ${isAdmin ? 'cursor-pointer hover:scale-[1.02] hover:-translate-y-1 hover:border-primary' : ''}`}
+                      onClick={() => isAdmin && handleEdit(item)}
+                    >
                       <CardContent className="p-6">
-                        {isAdmin && (
-                          <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                            <Button variant="outline" size="icon" className="h-7 w-7" onClick={() => handleEdit(item)}><Edit className="w-4 h-4" /></Button>
-                            <Button variant="destructive" size="icon" className="h-7 w-7" onClick={() => handleDelete(item.Id)}><Trash2 className="w-4 h-4" /></Button>
-                          </div>
-                        )}
                         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-3">
                           <div>
                             <h3 className="text-lg font-medium">{item.Title}</h3>
@@ -213,6 +212,7 @@ export function Timeline({ isAdmin = false }: TimelineProps) {
               initialData={selectedItem}
               onSave={handleSave}
               onCancel={() => setIsDialogOpen(false)}
+              onDelete={handleDelete}
               isSaving={isSaving}
             />
           </DialogContent>

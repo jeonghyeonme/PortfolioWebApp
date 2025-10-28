@@ -25,10 +25,11 @@ interface TimelineFormProps {
   initialData?: TimelineItem | null;
   onSave: (data: TimelineFormValues) => void;
   onCancel: () => void;
+  onDelete: (id: string) => void;
   isSaving: boolean;
 }
 
-export function TimelineForm({ initialData, onSave, onCancel, isSaving }: TimelineFormProps) {
+export function TimelineForm({ initialData, onSave, onCancel, onDelete, isSaving }: TimelineFormProps) {
   const form = useForm<TimelineFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -47,9 +48,16 @@ export function TimelineForm({ initialData, onSave, onCancel, isSaving }: Timeli
     onSave(data);
   };
 
+  const handleDelete = () => {
+    if (initialData?.Id) {
+      onDelete(initialData.Id);
+    }
+  };
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        {/* ... form fields ... */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <FormField
             control={form.control}
@@ -152,13 +160,22 @@ export function TimelineForm({ initialData, onSave, onCancel, isSaving }: Timeli
             </FormItem>
           )}
         />
-        <div className="flex justify-end gap-2">
-          <Button type="button" variant="outline" onClick={onCancel} disabled={isSaving}>
-            취소
-          </Button>
-          <Button type="submit" disabled={isSaving}>
-            {isSaving ? '저장 중...' : '저장'}
-          </Button>
+        <div className="flex justify-between items-center">
+          <div>
+            {initialData && (
+              <Button type="button" variant="destructive" onClick={handleDelete} disabled={isSaving}>
+                삭제
+              </Button>
+            )}
+          </div>
+          <div className="flex gap-2">
+            <Button type="button" variant="outline" onClick={onCancel} disabled={isSaving}>
+              취소
+            </Button>
+            <Button type="submit" disabled={isSaving}>
+              {isSaving ? '저장 중...' : '저장'}
+            </Button>
+          </div>
         </div>
       </form>
     </Form>
