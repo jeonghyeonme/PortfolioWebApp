@@ -90,7 +90,7 @@ export function HeroSection({ isAdmin = false }: HeroSectionProps) {
   };
 
   const renderBioFromHTML = (htmlString: string) => {
-    return <div className="prose dark:prose-invert max-w-none" dangerouslySetInnerHTML={{ __html: htmlString }} />;
+    return <div className="ProseMirror" dangerouslySetInnerHTML={{ __html: htmlString }} />;
   };
 
   if (loading) return <section className="min-h-screen" />;
@@ -142,7 +142,7 @@ export function HeroSection({ isAdmin = false }: HeroSectionProps) {
               <span className="bg-gradient-to-r from-primary to-chart-1 bg-clip-text text-transparent">{profile.job_title}</span>{' '}
               {profile.full_name}입니다
             </h1>
-            <div className="text-xl sm:text-2xl text-foreground/80 mb-8 max-w-3xl mx-auto leading-relaxed">
+            <div className="mb-8 max-w-3xl mx-auto">
               {renderBioFromHTML(profile.bio)}
             </div>
             <div className="flex flex-wrap justify-center gap-2 mb-8">

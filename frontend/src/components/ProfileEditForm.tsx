@@ -1,14 +1,14 @@
 import { useState, useEffect, ChangeEvent, FormEvent } from 'react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
-import { Textarea } from './ui/textarea';
 import { Label } from './ui/label';
 import { updateProfile, ProfileData } from '../services/profile';
 import { toast } from 'sonner';
+import { TiptapEditor } from './TiptapEditor'; // Import TiptapEditor
 
 interface ProfileEditFormProps {
   profileData: ProfileData;
-  onSave: (updatedProfile: ProfileData) => void; // Callback to notify parent component
+  onSave: (updatedProfile: ProfileData) => void;
   onCancel: () => void;
 }
 
@@ -22,7 +22,6 @@ export function ProfileEditForm({ profileData, onSave, onCancel }: ProfileEditFo
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     useEffect(() => {
-        // Convert keywords array to a comma-separated string for the form
         setFormData({
             ...profileData,
             keywords: Array.isArray(profileData.keywords) ? profileData.keywords.join(', ') : '',
@@ -32,6 +31,10 @@ export function ProfileEditForm({ profileData, onSave, onCancel }: ProfileEditFo
     const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
+    };
+
+    const handleBioChange = (newContent: string) => {
+        setFormData(prev => ({ ...prev, bio: newContent }));
     };
 
     const handleSocialChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -56,7 +59,6 @@ export function ProfileEditForm({ profileData, onSave, onCancel }: ProfileEditFo
         }
 
         try {
-            // Convert keywords string back to an array before submitting
             const keywordsArray = formData.keywords ? formData.keywords.split(',').map(k => k.trim()).filter(Boolean) : [];
             
             const dataToSubmit = {
@@ -66,7 +68,7 @@ export function ProfileEditForm({ profileData, onSave, onCancel }: ProfileEditFo
 
             const updatedProfile = await updateProfile(dataToSubmit as ProfileData);
             toast.success('프로필이 성공적으로 업데이트되었습니다!');
-            onSave(updatedProfile); // Notify parent component of the update
+            onSave(updatedProfile);
         } catch (error) {
             toast.error('프로필 업데이트에 실패했습니다.');
         } finally {
@@ -95,8 +97,13 @@ export function ProfileEditForm({ profileData, onSave, onCancel }: ProfileEditFo
                 <Input id="profile_image_url" name="profile_image_url" value={formData.profile_image_url || ''} onChange={handleChange} placeholder="https://..." />
             </div>
             <div>
-                <Label htmlFor="bio">자기소개 (Markdown 지원)</Label>
-                <Textarea id="bio" name="bio" value={formData.bio || ''} onChange={handleChange} rows={5} />
+                <Label htmlFor="bio">자기소개</Label>
+                <div className="mt-2 p-2 border rounded-md min-h-[120px]">
+                    <TiptapEditor
+                        content={formData.bio || ''}
+                        onChange={handleBioChange}
+                    />
+                </div>
             </div>
             <div className="grid md:grid-cols-2 gap-6">
                 <div>

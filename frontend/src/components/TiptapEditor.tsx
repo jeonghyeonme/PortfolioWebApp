@@ -20,7 +20,7 @@ export const TiptapEditor = ({ content, onChange }: TiptapEditorProps) => {
     content: content,
     editorProps: {
       attributes: {
-        class: 'focus:outline-none',
+        class: 'prose dark:prose-invert max-w-none focus:outline-none',
       },
     },
     onUpdate: ({ editor }) => {
