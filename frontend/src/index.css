@@ -5279,3 +5279,8 @@ html {
   margin-top: 2rem;
   margin-bottom: 2rem;
 }
+
+.custom-scrollable-dialog {
+  max-height: 90vh;
+  overflow-y: auto;
+}

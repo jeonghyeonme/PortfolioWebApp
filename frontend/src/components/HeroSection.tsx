@@ -117,7 +117,7 @@ export function HeroSection({ isAdmin = false }: HeroSectionProps) {
                     프로필 수정
                   </Button>
                 </DialogTrigger>
-                <DialogContent className="sm:max-w-[625px]">
+                <DialogContent className="sm:max-w-[625px] max-h-[90vh] overflow-y-auto custom-scrollable-dialog">
                   <DialogHeader><DialogTitle>프로필 수정</DialogTitle></DialogHeader>
                   <ProfileEditForm 
                     profileData={profile} 
@@ -135,12 +135,12 @@ export function HeroSection({ isAdmin = false }: HeroSectionProps) {
               </motion.div>
             )}
             <h1 
-              className="text-4xl sm:text-6xl lg:text-7xl mb-6"
+              className="text-4xl sm:text-5xl lg:text-6xl mb-6 flex flex-col items-center"
               style={{ fontWeight: 800, letterSpacing: '-0.025em', textShadow: '2px 2px 4px rgba(0,0,0,0.1)' }}
             >
-              안녕하세요,{' '}
-              <span className="bg-gradient-to-r from-primary to-chart-1 bg-clip-text text-transparent">{profile.job_title}</span>{' '}
-              {profile.full_name}입니다
+              <span>안녕하세요,</span>
+              <span className="bg-gradient-to-r from-primary to-chart-1 bg-clip-text text-transparent">{profile.job_title}</span>
+              <span>{profile.full_name}입니다</span>
             </h1>
             <div className="mb-8 max-w-3xl mx-auto">
               {renderBioFromHTML(profile.bio)}

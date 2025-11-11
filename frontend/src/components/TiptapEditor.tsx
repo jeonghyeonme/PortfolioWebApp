@@ -1,6 +1,7 @@
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import { SlashCommand } from './editor-extensions/slash-command';
+import { useEffect } from 'react';
 
 interface TiptapEditorProps {
   content: string;
@@ -27,6 +28,12 @@ export const TiptapEditor = ({ content, onChange }: TiptapEditorProps) => {
       onChange(editor.getHTML());
     },
   });
+
+  useEffect(() => {
+    if (editor && content && editor.getHTML() !== content) {
+      editor.commands.setContent(content, false);
+    }
+  }, [editor, content]);
 
   if (!editor) {
     return null;

@@ -4,7 +4,7 @@ import { Input } from './ui/input';
 import { Label } from './ui/label';
 import { updateProfile, ProfileData } from '../services/profile';
 import { toast } from 'sonner';
-import { TiptapEditor } from './TiptapEditor'; // Import TiptapEditor
+import { TiptapEditor } from './TiptapEditor';
 
 interface ProfileEditFormProps {
   profileData: ProfileData;
@@ -12,7 +12,6 @@ interface ProfileEditFormProps {
   onCancel: () => void;
 }
 
-// This interface is for the form's state, where keywords are a string
 interface FormState extends Omit<ProfileData, 'keywords'> {
     keywords: string;
 }
@@ -28,7 +27,7 @@ export function ProfileEditForm({ profileData, onSave, onCancel }: ProfileEditFo
         });
     }, [profileData]);
 
-    const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
     };
@@ -98,7 +97,7 @@ export function ProfileEditForm({ profileData, onSave, onCancel }: ProfileEditFo
             </div>
             <div>
                 <Label htmlFor="bio">자기소개</Label>
-                <div className="mt-2 p-2 border rounded-md min-h-[120px]">
+                <div className="mt-2 p-2 border rounded-md">
                     <TiptapEditor
                         content={formData.bio || ''}
                         onChange={handleBioChange}
