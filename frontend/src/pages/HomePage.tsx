@@ -1,7 +1,7 @@
 import { HeroSection } from '../components/HeroSection';
-import { HighlightSection } from '../components/HighlightSection';
 import { Dashboard } from '../components/Dashboard';
 import { Timeline } from '../components/Timeline';
+import { ExperienceSection } from '../components/ExperienceSection';
 
 interface HomePageProps {
   isAdmin?: boolean;
@@ -13,7 +13,7 @@ export function HomePage({ isAdmin = false }: HomePageProps) {
       <HeroSection isAdmin={isAdmin} />
       <Dashboard isAdmin={isAdmin} />
       <Timeline isAdmin={isAdmin} />
-      <HighlightSection />
+      <ExperienceSection isAdmin={isAdmin} />
     </div>
   );
 }
