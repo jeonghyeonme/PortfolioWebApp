@@ -1,40 +1,46 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from './ui/accordion';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { Button } from '../components/ui/button';
 import { FileText, Edit } from 'lucide-react';
-import { coverLetterAPI } from '../services/api';
+import { storiesAPI } from '../services/api';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from './ui/dialog';
-import { CoverLetterEditForm } from './CoverLetterEditForm';
-import { CoverLetterData } from '../services/coverLetter';
+import { MyStoriesEditForm } from './MyStoriesEditForm';
+import { StoriesData } from '../services/stories';
 
-interface CoverLetterSectionProps {
+interface MyStoriesSectionProps {
   isAdmin?: boolean;
 }
 
-export function CoverLetterSection({ isAdmin = false }: CoverLetterSectionProps) {
-  const [coverLetter, setCoverLetter] = useState<CoverLetterData | null>(null);
+export function MyStoriesSection({ isAdmin = false }: MyStoriesSectionProps) {
+  const [stories, setStories] = useState<StoriesData | null>(null);
   const [loading, setLoading] = useState(true);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
 
-  const fetchCoverLetter = async () => {
+  const fetchStories = async () => {
     setLoading(true);
     try {
-      const data = await coverLetterAPI.getPrimary(); 
-      setCoverLetter(data);
+      const data = await storiesAPI.getPrimary(); 
+      setStories(data);
     } catch (error) {
-      console.error('Failed to fetch cover letter:', error);
+      console.error('Failed to fetch stories:', error);
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchCoverLetter();
+    fetchStories();
   }, []);
 
-  const handleSave = (updatedCoverLetter: CoverLetterData) => {
-    setCoverLetter(updatedCoverLetter);
+  const handleSave = (updatedStories: StoriesData) => {
+    setStories(updatedStories);
     setIsEditDialogOpen(false);
   };
 
@@ -55,8 +61,8 @@ export function CoverLetterSection({ isAdmin = false }: CoverLetterSectionProps)
     );
   }
 
-  if (!coverLetter) {
-    return null; // Or show a message if no cover letter is found
+  if (!stories) {
+    return null; // Or show a message if no stories are found
   }
 
   return (
@@ -71,7 +77,7 @@ export function CoverLetterSection({ isAdmin = false }: CoverLetterSectionProps)
             <CardHeader className="flex flex-row items-center justify-between">
               <CardTitle className="flex items-center gap-2">
                 <FileText className="w-6 h-6" />
-                <span className="text-2xl">{coverLetter.title}</span>
+                <span className="text-2xl">My Stories</span>
               </CardTitle>
               {isAdmin && (
                 <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
@@ -83,10 +89,10 @@ export function CoverLetterSection({ isAdmin = false }: CoverLetterSectionProps)
                   </DialogTrigger>
                   <DialogContent className="sm:max-w-[625px] max-h-[90vh] overflow-y-auto custom-scrollable-dialog">
                     <DialogHeader>
-                      <DialogTitle>자기소개서 수정</DialogTitle>
+                      <DialogTitle>My Stories 수정</DialogTitle>
                     </DialogHeader>
-                    <CoverLetterEditForm
-                      coverLetterData={coverLetter}
+                    <MyStoriesEditForm
+                      storiesData={stories}
                       onSave={handleSave}
                       onCancel={() => setIsEditDialogOpen(false)}
                     />
@@ -95,9 +101,24 @@ export function CoverLetterSection({ isAdmin = false }: CoverLetterSectionProps)
               )}
             </CardHeader>
             <CardContent>
-              <div className="prose prose-lg max-w-none">
-                <p>{coverLetter.content}</p>
-              </div>
+              <Accordion type="single" collapsible className="w-full">
+                <AccordionItem value="item-1">
+                  <AccordionTrigger>성장 과정</AccordionTrigger>
+                  <AccordionContent>
+                    <div className="prose prose-lg max-w-none">
+                      {stories.growth_story || "성장 과정에 대한 내용이 여기에 표시됩니다."}
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
+                <AccordionItem value="item-2">
+                  <AccordionTrigger>성취 경험</AccordionTrigger>
+                  <AccordionContent>
+                    <div className="prose prose-lg max-w-none">
+                      {stories.accomplishment_story || "성취 경험에 대한 내용이 여기에 표시됩니다."}
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
             </CardContent>
           </Card>
         </motion.div>

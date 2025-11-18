@@ -363,11 +363,11 @@ export const dashboardAPI = {
 
 };
 
-// Cover Letter API
-import * as coverLetterService from './coverLetter';
+// Stories API
+import * as storiesService from './stories';
 
-export const coverLetterAPI = {
-  getPrimary: coverLetterService.getPrimaryCoverLetter,
-  getById: coverLetterService.getCoverLetterById,
-  update: coverLetterService.updateCoverLetter,
+export const storiesAPI = {
+  getPrimary: storiesService.getPrimaryStories,
+  getById: storiesService.getStoriesById,
+  update: storiesService.updateStories,
 };

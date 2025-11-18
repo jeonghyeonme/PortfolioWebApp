@@ -3,23 +3,23 @@ import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Textarea } from './ui/textarea';
 import { Label } from './ui/label';
-import { coverLetterAPI } from '../services/api';
-import { CoverLetterData } from '../services/coverLetter';
+import { storiesAPI } from '../services/api';
+import { StoriesData } from '../services/stories';
 import { Toaster, toast } from 'sonner';
 
-interface CoverLetterEditFormProps {
-  coverLetterData: CoverLetterData;
-  onSave: (updatedCoverLetter: CoverLetterData) => void;
+interface MyStoriesEditFormProps {
+  storiesData: StoriesData;
+  onSave: (updatedStories: StoriesData) => void;
   onCancel: () => void;
 }
 
-export function CoverLetterEditForm({ coverLetterData, onSave, onCancel }: CoverLetterEditFormProps) {
-  const [formData, setFormData] = useState<Partial<CoverLetterData>>(coverLetterData);
+export function MyStoriesEditForm({ storiesData, onSave, onCancel }: MyStoriesEditFormProps) {
+  const [formData, setFormData] = useState<Partial<StoriesData>>(storiesData);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
-    setFormData(coverLetterData);
-  }, [coverLetterData]);
+    setFormData(storiesData);
+  }, [storiesData]);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -27,11 +27,11 @@ export function CoverLetterEditForm({ coverLetterData, onSave, onCancel }: Cover
 
     setIsSubmitting(true);
     try {
-      const updatedData = await coverLetterAPI.update(formData.id, formData);
-      toast.success('자기소개서가 성공적으로 수정되었습니다.');
+      const updatedData = await storiesAPI.update(formData.id, formData);
+      toast.success('My Stories가 성공적으로 수정되었습니다.');
       onSave(updatedData);
     } catch (error) {
-      toast.error('자기소개서 수정에 실패했습니다.');
+      toast.error('My Stories 수정에 실패했습니다.');
     } finally {
       setIsSubmitting(false);
     }
@@ -42,21 +42,22 @@ export function CoverLetterEditForm({ coverLetterData, onSave, onCancel }: Cover
       <Toaster position="bottom-right" />
       <form onSubmit={handleSubmit} className="space-y-6">
         <div>
-          <Label htmlFor="title">제목</Label>
-          <Input
-            id="title"
-            value={formData.title || ''}
-            onChange={(e) => setFormData(p => ({ ...p, title: e.target.value }))}
+          <Label htmlFor="growth_story">성장 과정</Label>
+          <Textarea
+            id="growth_story"
+            value={formData.growth_story || ''}
+            onChange={(e) => setFormData(p => ({ ...p, growth_story: e.target.value }))}
+            rows={10}
             required
           />
         </div>
         <div>
-          <Label htmlFor="content">내용</Label>
+          <Label htmlFor="accomplishment_story">성취 경험</Label>
           <Textarea
-            id="content"
-            value={formData.content || ''}
-            onChange={(e) => setFormData(p => ({ ...p, content: e.target.value }))}
-            rows={15}
+            id="accomplishment_story"
+            value={formData.accomplishment_story || ''}
+            onChange={(e) => setFormData(p => ({ ...p, accomplishment_story: e.target.value }))}
+            rows={10}
             required
           />
         </div>

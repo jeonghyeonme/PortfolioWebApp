@@ -1,16 +1,16 @@
 import { supabase } from '../utils/supabase/client';
 
-export interface CoverLetterData {
+export interface StoriesData {
   id?: number;
-  title: string;
-  content: string;
+  growth_story: string;
+  accomplishment_story: string;
   created_at?: string;
   updated_at?: string;
 }
 
-const TABLE_NAME = 'cover_letters';
+const TABLE_NAME = 'stories';
 
-export const getPrimaryCoverLetter = async (): Promise<CoverLetterData> => {
+export const getPrimaryStories = async (): Promise<StoriesData> => {
   const { data, error } = await supabase
     .from(TABLE_NAME)
     .select('*')
@@ -19,13 +19,13 @@ export const getPrimaryCoverLetter = async (): Promise<CoverLetterData> => {
     .single();
 
   if (error) {
-    console.error('Error fetching primary cover letter:', error);
+    console.error('Error fetching primary stories:', error);
     throw error;
   }
   return data;
 };
 
-export const getCoverLetterById = async (id: number): Promise<CoverLetterData> => {
+export const getStoriesById = async (id: number): Promise<StoriesData> => {
   const { data, error } = await supabase
     .from(TABLE_NAME)
     .select('*')
@@ -33,13 +33,13 @@ export const getCoverLetterById = async (id: number): Promise<CoverLetterData> =
     .single();
 
   if (error) {
-    console.error(`Error fetching cover letter with id ${id}:`, error);
+    console.error(`Error fetching stories with id ${id}:`, error);
     throw error;
   }
   return data;
 };
 
-export const updateCoverLetter = async (id: number, updates: Partial<CoverLetterData>): Promise<CoverLetterData> => {
+export const updateStories = async (id: number, updates: Partial<StoriesData>): Promise<StoriesData> => {
   const { data, error } = await supabase
     .from(TABLE_NAME)
     .update(updates)
@@ -48,7 +48,7 @@ export const updateCoverLetter = async (id: number, updates: Partial<CoverLetter
     .single();
 
   if (error) {
-    console.error(`Error updating cover letter with id ${id}:`, error);
+    console.error(`Error updating stories with id ${id}:`, error);
     throw error;
   }
   return data;
