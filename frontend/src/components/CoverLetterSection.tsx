@@ -4,39 +4,39 @@ import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card'
 import { Button } from '../components/ui/button';
 import { FileText, Edit } from 'lucide-react';
 import { coverLetterAPI } from '../services/api';
-import { useNavigate } from 'react-router-dom';
-
-interface CoverLetter {
-  id: string;
-  title: string;
-  content: string;
-  created_at: string;
-  updated_at: string;
-}
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from './ui/dialog';
+import { CoverLetterEditForm } from './CoverLetterEditForm';
+import { CoverLetterData } from '../services/coverLetter';
 
 interface CoverLetterSectionProps {
   isAdmin?: boolean;
 }
 
 export function CoverLetterSection({ isAdmin = false }: CoverLetterSectionProps) {
-  const [coverLetter, setCoverLetter] = useState<CoverLetter | null>(null);
+  const [coverLetter, setCoverLetter] = useState<CoverLetterData | null>(null);
   const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+
+  const fetchCoverLetter = async () => {
+    setLoading(true);
+    try {
+      const data = await coverLetterAPI.getPrimary(); 
+      setCoverLetter(data);
+    } catch (error) {
+      console.error('Failed to fetch cover letter:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchCoverLetter = async () => {
-      try {
-        // Assuming you have a method to get the primary cover letter
-        const data = await coverLetterAPI.getPrimary(); 
-        setCoverLetter(data);
-      } catch (error) {
-        console.error('Failed to fetch cover letter:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
     fetchCoverLetter();
   }, []);
+
+  const handleSave = (updatedCoverLetter: CoverLetterData) => {
+    setCoverLetter(updatedCoverLetter);
+    setIsEditDialogOpen(false);
+  };
 
   if (loading) {
     return (
@@ -71,13 +71,27 @@ export function CoverLetterSection({ isAdmin = false }: CoverLetterSectionProps)
             <CardHeader className="flex flex-row items-center justify-between">
               <CardTitle className="flex items-center gap-2">
                 <FileText className="w-6 h-6" />
-                <h2 className="text-2xl">{coverLetter.title}</h2>
+                <span className="text-2xl">{coverLetter.title}</span>
               </CardTitle>
               {isAdmin && (
-                <Button variant="outline" size="sm" onClick={() => navigate(`/admin/cover-letter/edit/${coverLetter.id}`)}>
-                  <Edit className="w-4 h-4 mr-2" />
-                  수정
-                </Button>
+                <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+                  <DialogTrigger asChild>
+                    <Button variant="outline" size="sm">
+                      <Edit className="w-4 h-4 mr-2" />
+                      수정
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-[625px] max-h-[90vh] overflow-y-auto custom-scrollable-dialog">
+                    <DialogHeader>
+                      <DialogTitle>자기소개서 수정</DialogTitle>
+                    </DialogHeader>
+                    <CoverLetterEditForm
+                      coverLetterData={coverLetter}
+                      onSave={handleSave}
+                      onCancel={() => setIsEditDialogOpen(false)}
+                    />
+                  </DialogContent>
+                </Dialog>
               )}
             </CardHeader>
             <CardContent>

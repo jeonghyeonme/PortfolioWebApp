@@ -2,7 +2,7 @@
 import { Octokit } from "@octokit/rest";
 
 const GITHUB_USERNAME = 'jeonghyeonme';
-const GITHUB_TOKEN = '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';
+const GITHUB_TOKEN = import.meta.env.VITE_GITHUB_TOKEN;
 
 const octokit = new Octokit({
   auth: GITHUB_TOKEN,
