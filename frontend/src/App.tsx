@@ -15,6 +15,7 @@ import { LoginPage } from './pages/admin/LoginPage';
 // Admin-specific page imports for editing/creating
 import { ProjectEditPage } from './pages/admin/ProjectEditPage';
 import { DevLogEditPage } from './pages/admin/DevLogEditPage';
+import { CoverLetterEditPage } from './pages/admin/CoverLetterEditPage';
 
 // Custom hook for the admin shortcut
 const useAdminShortcut = () => {
@@ -66,6 +67,7 @@ function AppContent() {
             <Route path="devlogs" element={<DevLogsPage isAdmin={true} />} />
             <Route path="devlogs/new" element={<DevLogEditPage />} />
             <Route path="devlogs/edit/:id" element={<DevLogEditPage />} />
+            <Route path="cover-letter/edit/:id" element={<CoverLetterEditPage />} />
           </Route>
         </Route>
 

@@ -363,5 +363,11 @@ export const dashboardAPI = {
 
 };
 
+// Cover Letter API
+import * as coverLetterService from './coverLetter';
 
-
+export const coverLetterAPI = {
+  getPrimary: coverLetterService.getPrimaryCoverLetter,
+  getById: coverLetterService.getCoverLetterById,
+  update: coverLetterService.updateCoverLetter,
+};
