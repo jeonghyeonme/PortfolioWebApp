@@ -26,7 +26,7 @@ export function MyStoriesSection({ isAdmin = false }: MyStoriesSectionProps) {
   const fetchStories = async () => {
     setLoading(true);
     try {
-      const data = await storiesAPI.getPrimary(); 
+      const data = await storiesAPI.getPrimary();
       setStories(data);
     } catch (error) {
       console.error('Failed to fetch stories:', error);
@@ -44,9 +44,13 @@ export function MyStoriesSection({ isAdmin = false }: MyStoriesSectionProps) {
     setIsEditDialogOpen(false);
   };
 
+  const renderStoryFromHTML = (htmlString: string) => {
+    return <div className="ProseMirror" dangerouslySetInnerHTML={{ __html: htmlString }} />;
+  };
+
   if (loading) {
     return (
-      <section className="py-20 px-4 sm:px-6 lg:px-8">
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-background">
         <div className="max-w-4xl mx-auto">
           <div className="animate-pulse">
             <div className="h-8 bg-muted rounded mb-4 w-1/3"></div>
@@ -66,61 +70,53 @@ export function MyStoriesSection({ isAdmin = false }: MyStoriesSectionProps) {
   }
 
   return (
-    <section className="py-20 px-4 sm:px-6 lg:px-8 bg-muted/30">
-      <div className="max-w-4xl mx-auto">
+    <section className="min-h-screen flex items-center justify-center py-20 px-4 sm:px-6 lg:px-8 bg-background">
+      <div className="max-w-4xl mx-auto text-center">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
+          whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
+          viewport={{ once: true }}
         >
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between">
-              <CardTitle className="flex items-center gap-2">
-                <FileText className="w-6 h-6" />
-                <span className="text-2xl">My Stories</span>
-              </CardTitle>
-              {isAdmin && (
-                <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-                  <DialogTrigger asChild>
-                    <Button variant="outline" size="sm">
-                      <Edit className="w-4 h-4 mr-2" />
-                      수정
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent className="sm:max-w-[625px] max-h-[90vh] overflow-y-auto custom-scrollable-dialog">
-                    <DialogHeader>
-                      <DialogTitle>My Stories 수정</DialogTitle>
-                    </DialogHeader>
-                    <MyStoriesEditForm
-                      storiesData={stories}
-                      onSave={handleSave}
-                      onCancel={() => setIsEditDialogOpen(false)}
-                    />
-                  </DialogContent>
-                </Dialog>
-              )}
-            </CardHeader>
-            <CardContent>
-              <Accordion type="single" collapsible className="w-full">
-                <AccordionItem value="item-1">
-                  <AccordionTrigger>성장 과정</AccordionTrigger>
-                  <AccordionContent>
-                    <div className="prose prose-lg max-w-none">
-                      {stories.growth_story || "성장 과정에 대한 내용이 여기에 표시됩니다."}
-                    </div>
-                  </AccordionContent>
-                </AccordionItem>
-                <AccordionItem value="item-2">
-                  <AccordionTrigger>성취 경험</AccordionTrigger>
-                  <AccordionContent>
-                    <div className="prose prose-lg max-w-none">
-                      {stories.accomplishment_story || "성취 경험에 대한 내용이 여기에 표시됩니다."}
-                    </div>
-                  </AccordionContent>
-                </AccordionItem>
-              </Accordion>
-            </CardContent>
-          </Card>
+          {isAdmin && (
+            <div className="flex justify-center mb-4">
+              <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+                <DialogTrigger asChild>
+                  <Button variant="outline">
+                    <Edit className="w-4 h-4 mr-2" />
+                    My Stories 수정
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-[625px] max-h-[90vh] overflow-y-auto custom-scrollable-dialog">
+                  <DialogHeader>
+                    <DialogTitle>My Stories 수정</DialogTitle>
+                  </DialogHeader>
+                  <MyStoriesEditForm
+                    storiesData={stories}
+                    onSave={handleSave}
+                    onCancel={() => setIsEditDialogOpen(false)}
+                  />
+                </DialogContent>
+              </Dialog>
+            </div>
+          )}
+
+          <h2 className="text-3xl sm:text-4xl mb-12 font-bold tracking-tight">My Stories</h2>
+          
+          <div className="text-left space-y-12">
+            <div>
+              <h3 className="text-2xl font-semibold mb-4 border-b pb-2">성장 과정</h3>
+              <div className="prose prose-lg max-w-none text-muted-foreground">
+                {renderStoryFromHTML(stories.growth_story || "성장 과정에 대한 내용이 여기에 표시됩니다.")}
+              </div>
+            </div>
+            <div>
+              <h3 className="text-2xl font-semibold mb-4 border-b pb-2">성취 경험</h3>
+              <div className="prose prose-lg max-w-none text-muted-foreground">
+                {renderStoryFromHTML(stories.accomplishment_story || "성취 경험에 대한 내용이 여기에 표시됩니다.")}
+              </div>
+            </div>
+          </div>
         </motion.div>
       </div>
     </section>

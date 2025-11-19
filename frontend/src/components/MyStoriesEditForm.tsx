@@ -1,11 +1,6 @@
-import { useState, useEffect, FormEvent } from 'react';
-import { Button } from './ui/button';
-import { Input } from './ui/input';
-import { Textarea } from './ui/textarea';
-import { Label } from './ui/label';
-import { storiesAPI } from '../services/api';
+import { MyStoriesEditForm } from './MyStoriesEditForm';
 import { StoriesData } from '../services/stories';
-import { Toaster, toast } from 'sonner';
+import { TiptapEditor } from './TiptapEditor';
 
 interface MyStoriesEditFormProps {
   storiesData: StoriesData;
@@ -43,23 +38,21 @@ export function MyStoriesEditForm({ storiesData, onSave, onCancel }: MyStoriesEd
       <form onSubmit={handleSubmit} className="space-y-6">
         <div>
           <Label htmlFor="growth_story">성장 과정</Label>
-          <Textarea
-            id="growth_story"
-            value={formData.growth_story || ''}
-            onChange={(e) => setFormData(p => ({ ...p, growth_story: e.target.value }))}
-            rows={10}
-            required
-          />
+          <div className="mt-2 p-2 border rounded-md">
+            <TiptapEditor
+              content={formData.growth_story || ''}
+              onChange={(newContent) => setFormData(p => ({ ...p, growth_story: newContent }))}
+            />
+          </div>
         </div>
         <div>
           <Label htmlFor="accomplishment_story">성취 경험</Label>
-          <Textarea
-            id="accomplishment_story"
-            value={formData.accomplishment_story || ''}
-            onChange={(e) => setFormData(p => ({ ...p, accomplishment_story: e.target.value }))}
-            rows={10}
-            required
-          />
+          <div className="mt-2 p-2 border rounded-md">
+            <TiptapEditor
+              content={formData.accomplishment_story || ''}
+              onChange={(newContent) => setFormData(p => ({ ...p, accomplishment_story: newContent }))}
+            />
+          </div>
         </div>
         <div className="flex justify-end gap-2">
           <Button type="button" variant="ghost" onClick={onCancel}>취소</Button>
