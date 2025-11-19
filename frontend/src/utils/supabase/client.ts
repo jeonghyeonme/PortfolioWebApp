@@ -3,7 +3,11 @@ import { projectId, publicAnonKey } from './info';
 
 const supabaseUrl = `https://${projectId}.supabase.co`;
 
-export const supabase = createClient(supabaseUrl, publicAnonKey);
+export const supabase = createClient(supabaseUrl, publicAnonKey, {
+  auth: {
+    persistSession: false,
+  },
+});
 
 // Helper function to check if user is authenticated
 export const getAuthUser = async () => {
