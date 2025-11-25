@@ -107,7 +107,22 @@ export const projectsAPI = {
   },
 };
 
+// GitHub Stats API (Cached)
+export const githubStatsAPI = {
+  get: async () => {
+    const { data, error } = await supabase
+      .from('github_stats')
+      .select('*')
+      .eq('id', 1)
+      .single();
 
+    if (error) {
+      console.error('Error fetching cached github stats:', error);
+      throw error;
+    }
+    return data;
+  },
+};
 
 // Highlights API
 export const highlightsAPI = {

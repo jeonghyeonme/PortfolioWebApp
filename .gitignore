@@ -4,3 +4,6 @@ backend/
 # Project documentation
 PortfolioWebApp_Overview.md
 .env
+
+# Supabase local development files
+/supabase/

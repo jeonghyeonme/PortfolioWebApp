@@ -4,8 +4,7 @@ import { motion } from 'motion/react';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer } from 'recharts';
 import { Calendar, Code, GitCommit, Star, Edit } from 'lucide-react';
-import { githubAPI } from '../services/githubAPI';
-import { dashboardAPI } from '../services/api';
+import { githubStatsAPI, dashboardAPI } from '../services/api';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogDescription } from './ui/dialog';
 import { Button } from './ui/button';
 import { Toaster } from 'sonner';
@@ -51,15 +50,22 @@ export function Dashboard({ isAdmin = false }: DashboardProps) {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const [dbData, totalStars, commitCountThisYear, commitActivity] = await Promise.all([
+        // 대시보드 데이터와 캐시된 GitHub 통계를 병렬로 가져옵니다.
+        const [dbData, cachedGithubStats] = await Promise.all([
           dashboardAPI.get(),
-          githubAPI.getTotalStars(),
-          githubAPI.getCommitCountThisYear(),
-          githubAPI.getCommitActivityForChart(),
+          githubStatsAPI.get(),
         ]);
 
         setDashboardData(dbData);
-        setGithubStats({ totalStars, commitCountThisYear, commitActivity });
+        
+        // 가져온 통계 데이터를 기존 state 구조에 맞게 적용합니다.
+        if (cachedGithubStats) {
+          setGithubStats({
+            totalStars: cachedGithubStats.total_stars,
+            commitCountThisYear: cachedGithubStats.annual_commits,
+            commitActivity: cachedGithubStats.monthly_commit_activity,
+          });
+        }
       } catch (err) {
         console.error('Failed to fetch dashboard data:', err);
         setError('데이터를 불러오는 데 실패했습니다. 잠시 후 다시 시도해주세요.');
