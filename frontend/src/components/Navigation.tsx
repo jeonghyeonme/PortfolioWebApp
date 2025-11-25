@@ -15,13 +15,11 @@ export function Navigation() {
   const navItems = [
     { path: '/', label: 'Home', icon: Home },
     { path: '/projects', label: 'Projects', icon: Folder },
-    { path: '/devlogs', label: 'Dev Log', icon: BookOpen },
   ];
 
   const adminNavItems = [
     { path: '/admin', label: 'Home', icon: Home },
     { path: '/admin/projects', label: 'Projects', icon: Folder },
-    { path: '/admin/devlogs', label: 'Dev Log', icon: BookOpen },
   ];
 
   const currentNavItems = location.pathname.startsWith('/admin') ? adminNavItems : navItems;

@@ -8,13 +8,10 @@ import { ProtectedRoute } from './components/auth/ProtectedRoute';
 import { HomePage } from './pages/HomePage';
 import { ProjectsPage } from './pages/ProjectsPage';
 import { ProjectDetailPage } from './pages/ProjectDetailPage';
-import { DevLogsPage } from './pages/DevLogsPage';
-import { DevLogDetailPage } from './pages/DevLogDetailPage';
 import { LoginPage } from './pages/admin/LoginPage';
 
 // Admin-specific page imports for editing/creating
 import { ProjectEditPage } from './pages/admin/ProjectEditPage';
-import { DevLogEditPage } from './pages/admin/DevLogEditPage';
 
 // Custom hook for the admin shortcut
 const useAdminShortcut = () => {
@@ -49,8 +46,6 @@ function AppContent() {
           <Route index element={<HomePage />} />
           <Route path="projects" element={<ProjectsPage />} />
           <Route path="projects/:id" element={<ProjectDetailPage />} />
-          <Route path="devlogs" element={<DevLogsPage />} />
-          <Route path="devlogs/:id" element={<DevLogDetailPage />} />
         </Route>
 
         {/* Admin Login Route */}
@@ -63,9 +58,6 @@ function AppContent() {
             <Route path="projects" element={<ProjectsPage isAdmin={true} />} />
             <Route path="projects/new" element={<ProjectEditPage />} />
             <Route path="projects/edit/:id" element={<ProjectEditPage />} />
-            <Route path="devlogs" element={<DevLogsPage isAdmin={true} />} />
-            <Route path="devlogs/new" element={<DevLogEditPage />} />
-            <Route path="devlogs/edit/:id" element={<DevLogEditPage />} />
           </Route>
         </Route>
 

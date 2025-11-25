@@ -107,72 +107,7 @@ export const projectsAPI = {
   },
 };
 
-// DevLogs API
-export const devlogsAPI = {
-  getAll: async (params?: { published?: boolean; tag?: string; limit?: number }) => {
-    let query = supabase
-      .from('DevLog')
-      .select(`
-        *,
-        TagsOnDevLogs (
-          Tag (
-            id,
-            name
-          )
-        )
-      `);
 
-    if (params?.published) {
-      query = query.eq('published', true);
-    }
-    
-    if (params?.limit) {
-      query = query.limit(params.limit);
-    }
-
-    query = query.order('created_at', { ascending: false });
-
-    let { data, error } = await query;
-
-    if (error) {
-      console.error('Error fetching dev logs:', error);
-      throw error;
-    }
-
-    if (params?.tag && data) {
-      data = data.filter((p: any) => 
-        p.TagsOnDevLogs.some((t: any) => t.Tag.name === params.tag)
-      );
-    }
-
-    return data.map((p: any) => ({
-      ...p,
-      tags: p.TagsOnDevLogs.map((t: any) => t.Tag.name)
-    }));
-  },
-  getById: async (id: string) => {
-    const { data, error } = await supabase
-      .from('DevLog')
-      .select(`
-        *,
-        TagsOnDevLogs (
-          Tag ( id, name )
-        )
-      `)
-      .eq('id', id)
-      .single();
-
-    if (error) {
-      console.error('Error fetching dev log by id:', error);
-      throw error;
-    }
-
-    return {
-      ...data,
-      tags: data.TagsOnDevLogs.map((t: any) => t.Tag.name),
-    };
-  },
-};
 
 // Highlights API
 export const highlightsAPI = {
